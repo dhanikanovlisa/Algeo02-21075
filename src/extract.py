@@ -46,29 +46,6 @@ def batch_extractor(images_path):
     result = list(result.values())
     return result
 
-def mean(arr):
-    result = [0] * 2048
-    for i in range(len(arr)):
-        result = np.add(result, arr[i])
-    result = result / len(arr)
-    return result
-
-def selisih(arr, mean):
-    for i in range(len(arr)):
-        arr[i] = arr[i] - mean
-    return arr
-
 # path0 = 'src\dataset\pins_Adriana Lima\Adriana Lima0_0.jpg'
 # path1 = 'src\dataset\pins_Adriana Lima\Adriana Lima1_1.jpg'
 # path = 'src\dataset\pins_Adriana Lima'
-
-# res = batch_extractor(path)
-# mean_res = mean(res)
-
-# A= np.array(selisih(res, mean_res))
-# AT= A.transpose()
-# print("yeah")
-# covarian = np.matmul(A, AT)
-# print(covarian.shape)
-# print(covarian)
-
