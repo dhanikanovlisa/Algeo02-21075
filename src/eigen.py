@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import linalg as lin
+from extract import *
 
 def mean(arr):
     result = [0] * 2048
@@ -19,35 +20,61 @@ def covarian(mat):
     covarian = np.matmul(A, AT)
     return covarian
 
-def conj_transpose(a): 
-    return np.conj(np.transpose(a))
 
-def proj_ab(a,b):                  
-    return np.dot(a, conj_transpose(b)) / lin.norm(b) * b
+#Mencari eigen value dan vector
+def eigen_qr(A):
+    m, n = A.shape
+    Q = np.eye(m)
+    for i in range(n - (m == n)):
+        H = np.eye(m)
+        H[i:, i:] = make_householder(A[i:, i])
+        Q = np.dot(Q, H)
+        A = np.dot(H, A)
+    return Q, -A
 
-# Mencari eigen menggunakan Gram-Schmidt Orthogonalization
-def qr_gs(A, type= np.float32):    
-    A = np.array(A, dtype=type)
-    (m, n) = np.shape(A)
+
+#Buat cari vektor normalisasi
+def make_householder(a):
+
+    u = a / (a[0] + np.copysign(np.linalg.norm(a), a[0]))
+    u[0] = 1
+    H = np.eye(a.shape[0])
+
+    H -= (2 / np.dot(u, u)) * u[:, None] @ u[None, :]
+    return H    
+
+def eigen_vektor():
+    #Ambil nilai eigen
+    path = "C:/Users/dhani/Algeo02-21075/src/dataset/pins_Adriana Lima"
+    A = covarian(batch_extractor(path))
+    Q, R = eigen_qr(A)
     
-    (m, n) = (m, n) if m > n else (m, m)
+    eigenValue = np.diag(R.round(5)) #isinya eigenvalue
+    m = np.size(A, 1)
+    matrixIdentitas = np.eye(m) #matriks identita
+    eV = np.zeros((m , m))
+    result = np.zeros((m , m))
+    matrixParameterik = np.zeros((m , m))
 
-    Q = np.zeros((m, n), dtype=type)
-    R = np.zeros((m, n), dtype=type)
+    for i in eigenValue:
+        b = np.zeros((m, 1))
+        if i != 0:
+            matrixParameterik = np.subtract(np.multiply(matrixIdentitas, i), A)
+            solve = np.linalg.solve(matrixParameterik, b)
+            print(solve)
+
+path = "C:/Users/dhani/Algeo02-21075/src/dataset/pins_Adriana Lima"
+A = covarian(batch_extractor(path))
+R = np.linalg.qr(A)[1]
+w,v = np.linalg.eig(R)
+print(v)
+
     
-    for k in range(n):       
-        pr_sum = np.zeros(m, dtype=type)
-        
-        for j in range(k):
-            pr_sum += proj_ab(A[:,k], Q[:,j])
-            
-        Q[:,k] = A[:,k] - pr_sum                                             
-        Q[:,k] = Q[:,k] / lin.norm(Q[:,k])
 
-    if type == complex:        
-        R = conj_transpose(Q).dot(A)
-    else: R = np.transpose(Q).dot(A)
-        
-    return -Q, -R
+
+
+
+
+
 
 
