@@ -162,3 +162,4 @@ window.mainloop()
 #place foto
 #file image dan directory connect ke fungsi extract feature
 #execusion time
+#tes 
