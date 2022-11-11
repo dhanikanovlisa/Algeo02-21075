@@ -56,7 +56,9 @@ class openImage():
     def open_Image():
         global getImage, displayed
         image = filedialog.askopenfilename(filetypes=[('Images JPG', "*.jpg")])
+        print("Source image = ", image)
         path = os.path.basename(image)
+        print("Image file = ", path)
         if image:
             strImage.set(path)
             canvasImage = Canvas(window, width=256, height = 256)
