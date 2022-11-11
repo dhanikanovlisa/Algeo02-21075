@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import linalg as lin
 from extract import *
+from sympy import *
 
 def mean(arr):
     result = [0] * 2048
@@ -45,33 +46,23 @@ def make_householder(a):
 
 def eigen_vektor():
     #Ambil nilai eigen
-    path = "C:/Users/dhani/Algeo02-21075/src/dataset/pins_Adriana Lima"
+    path = "C:/Users/dhani/Algeo02-21075/src/dataset/pins_Alexandra Daddario"
     A = covarian(batch_extractor(path))
     Q, R = eigen_qr(A)
     
     eigenValue = np.diag(R.round(5)) #isinya eigenvalue
     m = np.size(A, 1)
     matrixIdentitas = np.eye(m) #matriks identita
-    eV = np.zeros((m , m))
-    result = np.zeros((m , m))
-    matrixParameterik = np.zeros((m , m))
+    matrixParametrik = np.zeros((m , m))
+    eigenVec = np.zeros((m, m))
 
     for i in eigenValue:
-        b = np.zeros((m, 1))
         if i != 0:
-            matrixParameterik = np.subtract(np.multiply(matrixIdentitas, i), A)
-            solve = np.linalg.solve(matrixParameterik, b)
-            print(solve)
+            matrixParametrik = np.subtract(np.multiply(matrixIdentitas, i), A)
+            m = Matrix(matrixParametrik)
+            print(m.nullspace())
 
-path = "C:/Users/dhani/Algeo02-21075/src/dataset/pins_Adriana Lima"
-A = covarian(batch_extractor(path))
-R = np.linalg.qr(A)[1]
-w,v = np.linalg.eig(R)
-print(v)
-
-    
-
-
+eigen_vektor()
 
 
 
