@@ -65,7 +65,7 @@ def qr_iteration(A):
 def eigenFace(selisih, vectorEigen):
     #cari matriks eigen face = selisih antar citra x vektor eigen
     #Kalo fotonya 4, eigen vectornya 4x4, matriks selsish 2048x4
-    eFace = np.multiply(np.tranpose(selisih), vectorEigen)
+    eFace = np.multiply(np.transpose(selisih), vectorEigen)
     
     #Kalo 4 image berarti selisihnya 2048 x 4 berarti vector eigennya 4x3
     wFace = np.multiply(np.transpose(eFace), selisih)
