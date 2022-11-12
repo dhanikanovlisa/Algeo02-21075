@@ -31,7 +31,8 @@ def eigen_qr(A):
         H[i:, i:] = make_householder(A[i:, i])
         Q = np.dot(Q, H)
         A = np.dot(H, A)
-    return Q, -A
+    
+    return Q, A
 
 
 #Buat cari vektor normalisasi
@@ -46,13 +47,18 @@ def make_householder(a):
 
 def eigen_vektor():
     #Ambil nilai eigen
-    path = "C:/Users/dhani/Algeo02-21075/src/dataset/pins_Alexandra Daddario"
+    path = "src/dataset/pins_Adriana Lima"
     A = covarian(batch_extractor(path))
-    Q, R = eigen_qr(A)
+    Q, R = np.linalg.qr(A)
+    W, V = lin.eig(A)
+    # print(R)
+
+    print("Eigen Lib: ", W)
     
-    eigenValue = np.diag(R.round(5)) #isinya eigenvalue
+    eigenValue, yea = qr_iteration(R) #isinya eigenvalue
+    print("Eigen Value: ", eigenValue)
     m = np.size(A, 1)
-    matrixIdentitas = np.eye(m) #matriks identita
+    matrixIdentitas = np.eye(m) #matriks identitas
     matrixParametrik = np.zeros((m , m))
     eigenVec = np.zeros((m, m))
 
@@ -60,9 +66,41 @@ def eigen_vektor():
         if i != 0:
             matrixParametrik = np.subtract(np.multiply(matrixIdentitas, i), A)
             m = Matrix(matrixParametrik)
-            print(m.nullspace())
+            # print(m.nullspace())
 
-eigen_vektor()
+# eigen_vektor()
+
+def qr_iteration(A):
+  
+    #Algorithm to find eigenValues and eigenVector matrix using simultaneous power iteration.
+
+    n, m = A.shape 
+    Q = np.random.rand(n, m) #Make a random n x k matrix
+    Q, _ = eigen_qr(Q) #Use QR decomposition to Q
+
+ 
+    for i in range(100):
+        Z = A.dot(Q)
+        Q, R = eigen_qr(Z)
+    #Do the same thing over and over until it converges
+    return np.diag(R), Q
+
+
+path = "src/dataset/pins_Adriana Lima"
+cov = covarian(batch_extractor(path))
+
+W, V = lin.eig(cov)
+W1, V1 = qr_iteration(cov)
+
+print(type(W))
+W = np.sort(W)[::-1]
+W1 = np.sort(W1)[::-1]
+
+
+print("EigenValue Lib: \n", W,"\n\n")
+print("EigenValue code: \n", W1,"\n\n")
+print("EigenVector Lib: \n", V,"\n\n")
+
 
 
 
