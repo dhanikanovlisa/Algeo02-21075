@@ -45,31 +45,6 @@ def make_householder(a):
     H -= (2 / np.dot(u, u)) * u[:, None] @ u[None, :]
     return H    
 
-def eigen_vektor():
-    #Ambil nilai eigen
-    path = "src/dataset/pins_Adriana Lima"
-    A = covarian(batch_extractor(path))
-    Q, R = np.linalg.qr(A)
-    W, V = lin.eig(A)
-    # print(R)
-
-    print("Eigen Lib: ", W)
-    
-    eigenValue, yea = qr_iteration(R) #isinya eigenvalue
-    print("Eigen Value: ", eigenValue)
-    m = np.size(A, 1)
-    matrixIdentitas = np.eye(m) #matriks identitas
-    matrixParametrik = np.zeros((m , m))
-    eigenVec = np.zeros((m, m))
-
-    for i in eigenValue:
-        if i != 0:
-            matrixParametrik = np.subtract(np.multiply(matrixIdentitas, i), A)
-            m = Matrix(matrixParametrik)
-            # print(m.nullspace())
-
-# eigen_vektor()
-
 def qr_iteration(A):
   
     #Algorithm to find eigenValues and eigenVector matrix using simultaneous power iteration.
@@ -86,20 +61,28 @@ def qr_iteration(A):
     return np.diag(R), Q
 
 
+
+def eigenFace(selisih, vectorEigen):
+    #cari matriks eigen face = selisih antar citra x vektor eigen
+    #Kalo fotonya 4, eigen vectornya 4x4, matriks selsish 2048x4
+    eFace = np.multiply(np.tranpose(selisih), vectorEigen)
+    
+    #Kalo 4 image berarti selisihnya 2048 x 4 berarti vector eigennya 4x3
+    wFace = np.multiply(np.transpose(eFace), selisih)
+    
+    return wFace
+
+
+
 path = "src/dataset/pins_Adriana Lima"
+extract = batch_extractor(path)
 cov = covarian(batch_extractor(path))
-
-W, V = lin.eig(cov)
-W1, V1 = qr_iteration(cov)
-
-print(type(W))
-W = np.sort(W)[::-1]
-W1 = np.sort(W1)[::-1]
-
-
-print("EigenValue Lib: \n", W,"\n\n")
-print("EigenValue code: \n", W1,"\n\n")
-print("EigenVector Lib: \n", V,"\n\n")
+matSelisih = selisih(extract, mean(extract))
+eigVal, eigVec = qr_iteration(cov)
+face = eigenFace(matSelisih ,eigVec)
+print(eigVec)
+print("\n\n\n")
+print(face)
 
 
 
