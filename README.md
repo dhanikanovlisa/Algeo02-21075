@@ -1,3 +1,10 @@
 # Algeo02-21075
 
 #BISABISABISABISA TAKBIRRRR!!!!
+
+#PASTIIN INSTALL
+1. Tkinter
+2. Numpy
+3. Sympy
+4. PIL
+5. OpenCV
