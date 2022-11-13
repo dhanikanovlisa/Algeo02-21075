@@ -3,6 +3,7 @@ from numpy import linalg as lin
 from extract import *
 from sympy import *
 
+
 def mean(arr):
     result = [0] * 2048
     for i in range(len(arr)):
@@ -76,11 +77,24 @@ def weightFace(eigFace,selisih):
 
 
 path = "src/dataset/pins_Adriana Lima"
-extract = batch_extractor(path)
-cov = covarian(batch_extractor(path))
-matSelisih = np.array(selisih(extract, mean(extract)))
+names, extract = batch_extractor(path)
+
+cov = covarian(extract)
+matSelisih = selisih(extract, mean(extract))
 eigVal, eigVec = qr_iteration(cov)
-face = np.array(eigenFace(matSelisih ,eigVec))
+face = eigenFace(matSelisih ,eigVec)
+weight = weightFace(face, matSelisih)
 print(eigVec)
-print("\n\n\n")
-print(face.shape)
+print(weight)
+
+
+path1 = "src/dataset/test"
+name, extract1 = batch_extractor(path1) #1x2048
+matSelisih1 = selisih(extract1, mean(extract1)) #1x2048 query-mean
+
+#eigenface 2048x4
+queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #4x1
+distance = np.linalg.norm(weight - queryWeight, axis = 0)
+bestMatch = np.argmin(distance)
+print(distance)
+print(names[bestMatch])
