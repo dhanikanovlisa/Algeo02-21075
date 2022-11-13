@@ -45,3 +45,16 @@ def batch_extractor(images_path):
         i += 1 
     result = list(result.values())
     return result
+
+'''
+path = "src/dataset/pins_camila mendes/camila mendes0_948.jpg"
+feature = extract_features(path)
+feature = np.array(feature)
+print(feature.shape) # 2048 x 1
+
+
+path2 = "src/dataset/pins_camila mendes"
+batch = batch_extractor(path2)
+batch = np.array(batch)
+print(batch.shape) # N x 2048
+'''
