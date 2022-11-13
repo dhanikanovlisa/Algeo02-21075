@@ -64,29 +64,23 @@ def qr_iteration(A):
 
 def eigenFace(selisih, vectorEigen):
     #cari matriks eigen face = selisih antar citra x vektor eigen
-    #Kalo fotonya 4, eigen vectornya 4x4, matriks selsish 2048x4
-    eFace = np.multiply(np.transpose(selisih), vectorEigen)
-    
-    #Kalo 4 image berarti selisihnya 2048 x 4 berarti vector eigennya 4x3
-    wFace = np.multiply(np.transpose(eFace), selisih)
-    
-    return wFace
+    #Kalo fotonya 4, eigen vectornya 4x4, matriks selisih 2048x4
+    eFace = np.matmul(np.transpose(selisih), vectorEigen)
+    return eFace
 
+
+def weightFace(eigFace,selisih):
+    #Kalo 4 image berarti selisihnya 2048 x 4 berarti vector eigennya 4x3
+    wFace = np.matmul(np.transpose(eigFace), np.transpose(selisih))
+    return wFace
 
 
 path = "src/dataset/pins_Adriana Lima"
 extract = batch_extractor(path)
 cov = covarian(batch_extractor(path))
-matSelisih = selisih(extract, mean(extract))
+matSelisih = np.array(selisih(extract, mean(extract)))
 eigVal, eigVec = qr_iteration(cov)
-face = eigenFace(matSelisih ,eigVec)
+face = np.array(eigenFace(matSelisih ,eigVec))
 print(eigVec)
 print("\n\n\n")
-print(face)
-
-
-
-
-
-
-
+print(face.shape)
