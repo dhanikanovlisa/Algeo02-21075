@@ -1,5 +1,7 @@
 import numpy as np
-import extract
+from numpy import linalg as lin
+from extract import *
+from sympy import *
 
 def mean(arr):
     result = [0] * 2048
@@ -13,35 +15,71 @@ def selisih(arr, mean):
         arr[i] = arr[i] - mean
     return arr
 
-def kovarian(arr):
-    compute = selisih(arr, mean(arr))
-    trans = np.transpose(compute)
-    covarian = np.matmul(compute, trans)
+def covarian(mat):
+    A= np.array(selisih(mat, mean(mat)))
+    AT= A.transpose()
+    covarian = np.matmul(A, AT)
     return covarian
 
-def eigen_qr(arr, iterations=10000):
-    Ak = np.copy(arr)
-    n = Ak.shape[0]
-    QQ = np.eye(n)
-    for k in range(iterations):
-        s = Ak.item(n-1, n-1)
-        smult = s * np.eye(n)
-        Q, R = np.linalg.qr(np.subtract(Ak, smult))
-        Ak = np.add(R @ Q, smult)
-        QQ = QQ @ Q
-    return Ak, QQ
+
+#Mencari eigen value dan vector
+def eigen_qr(A):
+    m, n = A.shape
+    Q = np.eye(m)
+    for i in range(n - (m == n)):
+        H = np.eye(m)
+        H[i:, i:] = make_householder(A[i:, i])
+        Q = np.dot(Q, H)
+        A = np.dot(H, A)
+    
+    return Q, A
 
 
-# Testing
-"""
-path = 'src\dataset\pins_Adriana Lima'
+#Buat cari vektor normalisasi
+def make_householder(a):
 
-vec = extract.batch_extractor(path)
-kov = kovarian(vec)
-print(np.shape(kov))
-eigval, eigvec = np.linalg.eig(kov)
-eigqr, eigvecqr = eigen_qr(kov)
+    u = a / (a[0] + np.copysign(np.linalg.norm(a), a[0]))
+    u[0] = 1
+    H = np.eye(a.shape[0])
 
-print(eigvecqr, "\n\n")
-print(eigvec)
-"""
+    H -= (2 / np.dot(u, u)) * u[:, None] @ u[None, :]
+    return H    
+
+def qr_iteration(A):
+  
+    #Algorithm to find eigenValues and eigenVector matrix using simultaneous power iteration.
+
+    n, m = A.shape 
+    Q = np.random.rand(n, m) #Make a random n x k matrix
+    Q, _ = eigen_qr(Q) #Use QR decomposition to Q
+
+ 
+    for i in range(100):
+        Z = A.dot(Q)
+        Q, R = eigen_qr(Z)
+    #Do the same thing over and over until it converges
+    return np.diag(R), Q
+    
+
+def eigenFace(selisih, vectorEigen):
+    #cari matriks eigen face = selisih antar citra x vektor eigen
+    #Kalo fotonya 4, eigen vectornya 4x4, matriks selisih 2048x4
+    eFace = np.matmul(np.transpose(selisih), vectorEigen)
+    return eFace
+
+
+def weightFace(eigFace,selisih):
+    #Kalo 4 image berarti selisihnya 2048 x 4 berarti vector eigennya 4x3
+    wFace = np.matmul(np.transpose(eigFace), np.transpose(selisih))
+    return wFace
+
+
+path = "src/dataset/pins_Adriana Lima"
+extract = batch_extractor(path)
+cov = covarian(batch_extractor(path))
+matSelisih = np.array(selisih(extract, mean(extract)))
+eigVal, eigVec = qr_iteration(cov)
+face = np.array(eigenFace(matSelisih ,eigVec))
+print(eigVec)
+print("\n\n\n")
+print(face.shape)

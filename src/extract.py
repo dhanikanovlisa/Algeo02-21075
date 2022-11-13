@@ -3,7 +3,7 @@ import numpy as np
 import os
 from matplotlib.pyplot import imread
 import sys
-np.set_printoptions(threshold=sys.maxsize)
+from numpy.linalg import eig
 
 # Feature extractor
 def extract_features(image_path, vector_size=32):
@@ -46,6 +46,15 @@ def batch_extractor(images_path):
     result = list(result.values())
     return result
 
-# path0 = 'src\dataset\pins_Adriana Lima\Adriana Lima0_0.jpg'
-# path1 = 'src\dataset\pins_Adriana Lima\Adriana Lima1_1.jpg'
-# path = 'src\dataset\pins_Adriana Lima'
+'''
+path = "src/dataset/pins_camila mendes/camila mendes0_948.jpg"
+feature = extract_features(path)
+feature = np.array(feature)
+print(feature.shape) # 2048 x 1
+
+
+path2 = "src/dataset/pins_camila mendes"
+batch = batch_extractor(path2)
+batch = np.array(batch)
+print(batch.shape) # N x 2048
+'''

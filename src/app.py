@@ -2,10 +2,10 @@ import tkinter as tk
 import os
 from tkinter import *
 from tkinter import filedialog
-from tkinter.filedialog import askopenfile
 from PIL import Image, ImageTk
-import cv2
 from cv2 import * 
+from extract import *
+from eigen import *
 
 window = tk.Tk()
 
@@ -54,7 +54,7 @@ class openImage():
 
     
     def open_Image():
-        global getImage, displayed
+        global image, getImage, displayed
         image = filedialog.askopenfilename(filetypes=[('Images JPG', "*.jpg")])
         path = os.path.basename(image)
         if image:
@@ -63,13 +63,14 @@ class openImage():
             canvasImage.pack()
         
             getImage= Image.open(image)
-            resize_displayed= getImage.resize((256, 256))
+            resize_displayed= getImage.resize((256, 256), Image.LANCZOS)
             displayed = ImageTk.PhotoImage(resize_displayed)
             canvas.create_image(530, 240, anchor = NW, image=displayed)
         else:
             canvas.create_image(530, 240, anchor = NW, image=None)
             strImage.set("No file chosen")
-            
+       
+
         
     inputImage = tk.Label(text="Input Your Image",
                           font=H2_tuple,
@@ -84,10 +85,14 @@ class openImage():
                              fg=main_color,
                              font=Body_tuple)
     selectedImage.place(x=100, y=470)
-
-    buttonImage = tk.Button(text="Choose File",
+    
+    img_dir = os.getcwd()
+    
+    buttonFile = PhotoImage(file=f'{img_dir}/src/image/button1.png')
+    buttonImage = tk.Button(
                             font=Body_tuple,
-                            width=10,
+                            bd = 0,
+                            image = buttonFile,
                             command=combineFunc(open_Image),
                             )
     buttonImage.place(x=100, y=410)
@@ -103,32 +108,58 @@ class openDataSet():
     
     
     def openData():
-        pathFile = filedialog.askdirectory()
-        global strData1, strData
+        global pathFile, strData1, strData, cov, eigVal,eigVec
+        pathFile = filedialog.askdirectory()  
         print(pathFile)
         if pathFile:
             strData1 = tk.Label(text="Succesfully choosed", font=Body_tuple, fg=main_color, bg=bg_color)
             strData1.place(x=100, y= 300)
+            
+            cov = covarian(batch_extractor(pathFile))
+            eigVal, eigVec = qr_iteration(cov)  
+            print(cov)
+            print(eigVec)
         else:
             strData = tk.Label(text="Dataset not chosen", font=Body_tuple, fg=main_color, bg=bg_color)
             strData.place(x=100, y= 300)
-        
-
+    
+    
+    
     inputFile = tk.Label(text="Input Your Dataset",
                          font=H2_tuple,
                          fg=main_color,
                          bg=bg_color)
     inputFile.place(x=100, y=180)
     
-            
-    buttonFile = tk.Button(text="Choose File",
-                           width=10,
+    img_dir = os.getcwd()
+    
+    buttonFileImage = PhotoImage(file=f'{img_dir}/src/image/button2.png')  
+    buttonFile = tk.Button(
+                           bd = 0,
                            font=Body_tuple,
+                           image = buttonFileImage,
                            command=combineFunc(openData)
                            )
     buttonFile.place(x=100, y=230)
     
+class openCamera():
+    def combineFunc(*funcs):
+        def combinedFunc(*args, **kwargs):
+            for f in funcs:
+                f(*args, **kwargs)
 
+        return combinedFunc
+    
+    img_dir = os.getcwd()
+    
+    buttonCameraImage = PhotoImage(file=f'{img_dir}/src/image/button3.png')  
+    buttonCamera = tk.Button(
+                           bd = 0,
+                           font=Body_tuple,
+                           image = buttonCameraImage
+                           )
+    buttonCamera.place(x= 100, y = 480)
+    
     
 text_Result = tk.Label(text="Result",
                        font=H2_tuple,
@@ -155,9 +186,13 @@ executionTime = tk.Label(text="Execution time: ",
                      fg=main_color)
 executionTime.place(x= 500, y = 550)
 
-window.mainloop()
 
 
+
+def run():
+    window.mainloop()
+
+run()
 #tinggal print file directory atau gausah
 #place foto
 #file image dan directory connect ke fungsi extract feature
