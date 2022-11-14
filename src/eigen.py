@@ -77,7 +77,7 @@ def weightFace(eigFace,selisih):
 
 
 path = "src/dataset/testdata"
-names, extract = batch_extractor(path)
+names, extract = batch_extractor(path) #nx2048
 
 cov = covarian(extract)
 matSelisih = selisih(extract, mean(extract))
@@ -86,19 +86,27 @@ face = eigenFace(matSelisih ,eigVec)
 weight = weightFace(face, matSelisih)
 print(eigVec)
 print(weight)
+tes = np.array(weight)
+print(tes.shape)
 
 
-path1 = "src/dataset/test/Alexandra Daddario1_215.jpg"
-extract1 = extract_features(path1)
+path1 = "src/dataset/test/alycia dabnem carey1_1.jpg"
+extracttes = extract_features(path1) #1x2048
+print(extracttes)
+extract1 = []
+extract1.append(extracttes)
+query = extract1
 
-#matSelisih1 = selisih(extract1, mean(extract1)) #1x2048 query-mean
+matSelisih1 = selisih(query, mean(extract)) #1x2048 query-mean
+#tes = np.array(matSelisih1)
+#print(tes.shape)
+#eigenface 2048xn
+queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #nx2048
 
-#eigenface 2048x4
-#queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #4x1
-#distance = np.linalg.norm(weight - queryWeight, axis = 0)
-#bestMatch = np.argmin(distance)
-#print(distance)
-#print(names[bestMatch])
+distance = np.linalg.norm(weight - queryWeight, axis = 0) #7x7 
+bestMatch = np.argmin(distance)
+print(distance)
+print(names[bestMatch])
 
 
 #TAKBIRRRRRR
