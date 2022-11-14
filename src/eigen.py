@@ -55,7 +55,7 @@ def qr_iteration(A):
     Q, _ = eigen_qr(Q) #Use QR decomposition to Q
 
  
-    for i in range(100):
+    for i in range(1000):
         Z = A.dot(Q)
         Q, R = eigen_qr(Z)
     #Do the same thing over and over until it converges
@@ -76,8 +76,8 @@ def weightFace(eigFace,selisih):
     return wFace
 
 
-path = "src/dataset/pins_Adriana Lima"
-names, extract = batch_extractor(path)
+path = "src/dataset/testdata"
+names, extract = batch_extractor(path) #nx2048
 
 cov = covarian(extract)
 matSelisih = selisih(extract, mean(extract))
@@ -86,15 +86,27 @@ face = eigenFace(matSelisih ,eigVec)
 weight = weightFace(face, matSelisih)
 print(eigVec)
 print(weight)
+tes = np.array(weight)
+print(tes.shape)
 
 
-path1 = "src/dataset/test"
-name, extract1 = batch_extractor(path1) #1x2048
-matSelisih1 = selisih(extract1, mean(extract1)) #1x2048 query-mean
+path1 = "src/dataset/test/alycia dabnem carey1_1.jpg"
+extracttes = extract_features(path1) #1x2048
+print(extracttes)
+extract1 = []
+extract1.append(extracttes)
+query = extract1
 
-#eigenface 2048x4
-queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #4x1
-distance = np.linalg.norm(weight - queryWeight, axis = 0)
+matSelisih1 = selisih(query, mean(extract)) #1x2048 query-mean
+#tes = np.array(matSelisih1)
+#print(tes.shape)
+#eigenface 2048xn
+queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #nx2048
+
+distance = np.linalg.norm(weight - queryWeight, axis = 0) #7x7 
 bestMatch = np.argmin(distance)
 print(distance)
 print(names[bestMatch])
+
+
+#TAKBIRRRRRR
