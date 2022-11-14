@@ -66,11 +66,14 @@ class openImage():
             resize_displayed= getImage.resize((256, 256), Image.LANCZOS)
             displayed = ImageTk.PhotoImage(resize_displayed)
             canvas.create_image(530, 240, anchor = NW, image=displayed)
+            
+            query = extract_features(image)
+            
         else:
             canvas.create_image(530, 240, anchor = NW, image=None)
             strImage.set("No file chosen")
-       
-
+            
+        
         
     inputImage = tk.Label(text="Input Your Image",
                           font=H2_tuple,
@@ -115,10 +118,17 @@ class openDataSet():
             strData1 = tk.Label(text="Succesfully choosed", font=Body_tuple, fg=main_color, bg=bg_color)
             strData1.place(x=100, y= 300)
             
-            cov = covarian(batch_extractor(pathFile))
-            eigVal, eigVec = qr_iteration(cov)  
-            print(cov)
+            names, extract = batch_extractor(pathFile)
+            matSelisih = selisih(extract, mean(extract))
+            cov = covarian(extract)
+            eigVal, eigVec = qr_iteration(cov)
+            face = eigenFace(matSelisih, eigVec)
+            weight = weightFace(face, matSelisih)
             print(eigVec)
+            print("\n\n")
+            print(weight)
+            
+            
         else:
             strData = tk.Label(text="Dataset not chosen", font=Body_tuple, fg=main_color, bg=bg_color)
             strData.place(x=100, y= 300)
@@ -150,13 +160,34 @@ class openCamera():
 
         return combinedFunc
     
+     
+    def showFrame():
+        newWindow = Toplevel(window)
+        newWindow.title("Camera")
+        newWindow.geometry("500x500")
+        
+        cap= cv2.VideoCapture(0)
+    
+        def capture():
+            
+            cv2image= cv2.cvtColor(cap.read()[1],cv2.COLOR_BGR2RGB)
+            img = Image.fromarray(cv2image)
+            imgtk = ImageTk.PhotoImage(image = img)
+            newWindow.imgtk = imgtk
+            newWindow.configure(image=imgtk)
+            # Repeat after an interval to capture continiously
+            newWindow.after(20, capture)
+        
+        capture()
+    
     img_dir = os.getcwd()
     
     buttonCameraImage = PhotoImage(file=f'{img_dir}/src/image/button3.png')  
     buttonCamera = tk.Button(
                            bd = 0,
                            font=Body_tuple,
-                           image = buttonCameraImage
+                           image = buttonCameraImage,
+                           command = showFrame,
                            )
     buttonCamera.place(x= 100, y = 480)
     
