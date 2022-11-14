@@ -43,7 +43,7 @@ def batch_extractor(images_path):
     result = {}
 
     for f in files:
-        name = f.split('/')[-1].lower()
+        name = os.path.basename(f)
         result[name] = extract_features(f)
     
     names = []

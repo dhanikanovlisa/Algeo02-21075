@@ -76,7 +76,7 @@ def weightFace(eigFace,selisih):
     return wFace
 
 
-path = "src/dataset/testdata"
+'''path = "src/dataset/testdata"
 names, extract = batch_extractor(path) #nx2048
 
 cov = covarian(extract)
@@ -87,10 +87,10 @@ weight = weightFace(face, matSelisih)
 print(eigVec)
 print(weight)
 tes = np.array(weight)
-print(tes.shape)
+print(tes.shape)'''
 
 
-path1 = "src/dataset/test/alycia dabnem carey1_1.jpg"
+'''path1 = "src/dataset/test/alycia dabnem carey1_1.jpg"
 extracttes = extract_features(path1) #1x2048
 print(extracttes)
 extract1 = []
@@ -109,4 +109,4 @@ print(distance)
 print(names[bestMatch])
 
 
-#TAKBIRRRRRR
+#TAKBIRRRRRR '''
