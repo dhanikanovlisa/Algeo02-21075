@@ -219,9 +219,6 @@ class openDataSet:
     executionTime.place(x= 500, y = 550)      
             
 
-            
-    
-    
     inputFile = tk.Label(text="Input Your Dataset",
                          font=H2_tuple,
                          fg=main_color,
@@ -239,44 +236,39 @@ class openDataSet:
                            )
     buttonFile.place(x=100, y=230)
     
-class openCamera:
-    def combineFunc(*funcs):
-        def combinedFunc(*args, **kwargs):
-            for f in funcs:
-                f(*args, **kwargs)
+def openCamera():
+    
+    newWindow = tk.Tk()
+    newWindow.geometry("850x550")
+    
+    label = Label(newWindow)
+    cap = cv2.VideoCapture(0)
+    
+    def show_frames():
+        # Get the latest frame and convert into Image
+        cv2image= cv2.cvtColor(cap.read()[1],cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(cv2image)
+        # Convert image to PhotoImage
+        imgtk = ImageTk.PhotoImage(image = img)
+        label.imgtk = imgtk
+        label.configure(image=imgtk)
+        # Repeat after an interval to capture continiously
+        label.after(20, show_frames)
+    
+    show_frames()
+    
 
-        return combinedFunc
+img_dir = os.getcwd()
+buttonCameraImage = PhotoImage(file=f'{img_dir}/src/image/button3.png')  
+buttonCamera = tk.Button(window, 
+                                bd = 0,
+                                font=Body_tuple,
+                                image = buttonCameraImage,
+                                command =openCamera,
+                                
+                                )
+buttonCamera.place(x= 100, y = 500)
     
-     
-    def showFrame():
-        newWindow = Toplevel(window)
-        newWindow.title("Camera")
-        newWindow.geometry("500x500")
-        
-        cap= cv2.VideoCapture(0)
-    
-        def capture():
-            
-            cv2image= cv2.cvtColor(cap.read()[1],cv2.COLOR_BGR2RGB)
-            img = Image.fromarray(cv2image)
-            imgtk = ImageTk.PhotoImage(image = img)
-            newWindow.imgtk = imgtk
-            newWindow.configure(image=imgtk)
-            # Repeat after an interval to capture continiously
-            newWindow.after(20, capture)
-        
-        capture()
-    
-    img_dir = os.getcwd()
-    
-    buttonCameraImage = PhotoImage(file=f'{img_dir}/src/image/button3.png')  
-    buttonCamera = tk.Button(
-                           bd = 0,
-                           font=Body_tuple,
-                           image = buttonCameraImage,
-                           command = showFrame,
-                           )
-    buttonCamera.place(x= 100, y = 500)
     
     
 text_Result = tk.Label(text="Result",

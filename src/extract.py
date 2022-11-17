@@ -9,8 +9,8 @@ import csv
 
 # Feature extractor
 def extract_features(image_path, vector_size=32):
-    image = imread(image_path)
-    # image = cv2.resize(image, (256,256), interpolation=cv2.INTER_AREA)
+    imageRead = imread(image_path)
+    image = cv2.resize(imageRead, (256,256), interpolation=cv2.INTER_AREA)
     try:
         # Using KAZE, cause SIFT, ORB and other was moved to additional module
         # which is adding addtional pain during install
@@ -57,4 +57,7 @@ def batch_extractor(images_path):
             
     return names, extract
 
-
+path = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/TUBES 2/testdata"
+names, extract = batch_extractor(path)
+tes = np.array(extract)
+print(tes.shape)
