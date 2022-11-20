@@ -21,6 +21,7 @@ window.option_add("*Font", "Montserrat")
 # CONFIG
 H1_tuple = ("Montserrat-Bold", 48)
 H2_tuple = ("Montserrat-Medium", 20)
+H2_new = ("Montserrat-Bold", 20)
 Body_tuple = ("Montserrat-Medium", 16)
 bg_color = ("#F1F3FF")
 main_color = ("#001666")
@@ -49,11 +50,49 @@ class openDataSet:
 
         return combinedFunc
     
-    
+    def openData():
+        global pathFile, strData1, strData, cov, names, extract, matSelisih, cov, eigVal, eigVec, face, weight, startData, intervalData
+        pathFile = filedialog.askdirectory() 
+        tes = os.path.basename(pathFile) 
+        
+        print(pathFile)
+        if pathFile:
+            strData1 = tk.Label(text="Succesfully choosed", font=Body_tuple, fg=main_color, bg=bg_color)
+            strData1.place(x=100, y= 260)
+            
+            startData = time.time()
+            names, extract = batch_extractor(pathFile)
+            matSelisih = selisih(extract, mean(extract))
+            cov = covarian(extract)
+            eigVal, eigVec = qr_iteration(cov)
+            face = eigenFace(matSelisih, eigVec)
+            weight = weightFace(face, matSelisih)
+            print("Vektor eigen: ")
+            print(eigVec)
+            print("-------------------------------------------------------------------------------------")
+            print("Eigenface: ")
+            print(face)
+            print("-------------------------------------------------------------------------------------")
+            print("Weight Face: ")
+            print(weight)
+            
+            endData = time.time()
+            intervalData = endData - startData
+            print("Interval process data: ")
+            print(intervalData)
 
+                
+        else:
+            strData = tk.Label(text="Dataset not chosen", font=Body_tuple, fg=main_color, bg=bg_color)
+            strData.place(x=100, y= 300)
+        
+        return pathFile
+
+    
     global path, strImage
     strImage = tk.StringVar()
     strImage.set("")
+    
     def open_Image():
         global imagePath, getImage, displayed, end, output, displayedResult, interval, path
         imagePath = filedialog.askopenfilename(filetypes=[('Images JPG', "*.jpg")])
@@ -106,7 +145,11 @@ class openDataSet:
             labelResult.pack()
             
             
-            displayresult = tk.Label(text = output,
+            frameResult = Frame(window, width = 250, height = 100)
+            frameResult.pack()
+            frameResult.place(x = 100, y = 600)
+        
+            displayresult = tk.Label(frame, text = output,
                                      font=Body_tuple,
                             bg=bg_color,
                             fg=main_color)
@@ -118,14 +161,16 @@ class openDataSet:
                             bg=bg_color,
                             fg="#FF0000")
             rundown.place(x =700, y = 550)
-
-        
-        
+            
+        elif imagePath and (not pathFile):
+            strImage.set("Please choose dataset first")
+            
         else:
             canvas.create_image(530, 240, anchor = NW, image=None)
             strImage.set("No file chosen")
-    
+        
 
+          
     inputImage = tk.Label(text="Input Your Image",
                           font=H2_tuple,
                           fg=main_color,
@@ -141,55 +186,18 @@ class openDataSet:
     selectedImage.place(x=100, y=440)
     
     img_dir = os.getcwd()
-
-    
-        
+   
     buttonFileOpen = PhotoImage(file=f'{img_dir}/src/components/button1.png')
     buttonImageOpen = tk.Button(
                             font=Body_tuple,
                             bd = 0,
                             image = buttonFileOpen,
+                            bg = bg_color, 
                             command=combineFunc(open_Image),
                             )
     buttonImageOpen.place(x=100, y=410)
     
     
-    
-    def openData():
-        global pathFile, strData1, strData, cov, names, extract, matSelisih, cov, eigVal, eigVec, face, weight, startData, intervalData
-        pathFile = filedialog.askdirectory() 
-        tes = os.path.basename(pathFile) 
-        print(pathFile)
-        print(tes)
-        if pathFile:
-            strData1 = tk.Label(text="Succesfully choosed", font=Body_tuple, fg=main_color, bg=bg_color)
-            strData1.place(x=100, y= 260)
-            
-            startData = time.time()
-            names, extract = batch_extractor(pathFile)
-            matSelisih = selisih(extract, mean(extract))
-            cov = covarian(extract)
-            eigVal, eigVec = qr_iteration(cov)
-            face = eigenFace(matSelisih, eigVec)
-            weight = weightFace(face, matSelisih)
-            print("Vektor eigen: ")
-            print(eigVec)
-            print("-------------------------------------------------------------------------------------")
-            print("Eigenface: ")
-            print(face)
-            print("-------------------------------------------------------------------------------------")
-            print("Weight Face: ")
-            print(weight)
-            
-            endData = time.time()
-            intervalData = endData - startData
-            print("Interval process data: ")
-            print(intervalData)
-
-                
-        else:
-            strData = tk.Label(text="Dataset not chosen", font=Body_tuple, fg=main_color, bg=bg_color)
-            strData.place(x=100, y= 300)
     
     executionTime = tk.Label(text="Execution time: ",
                          font=Body_tuple,
@@ -208,6 +216,7 @@ class openDataSet:
     buttonFileImage = PhotoImage(file=f'{img_dir}/src/components/button2.png')  
     buttonFile = tk.Button(
                            bd = 0,
+                           bg = bg_color, 
                            font=Body_tuple,
                            image = buttonFileImage,
                            command=openData
@@ -215,6 +224,7 @@ class openDataSet:
     buttonFile.place(x=100, y=230)
     
     def openCamera():
+        global img_item, getImage, displayed, labelResult, openResult,  displayedResult, frame
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
         cancel = False
         
@@ -238,10 +248,10 @@ class openDataSet:
                 roi_color = frame[y:y+h, x:x+w]
                 img_item = "./src/test/imagefromCam.png"
                 cv2.imwrite(img_item, displayCam)
-
+                
             endCamera = time.time()
             
-            if(endCamera - startCamera >= 10):
+            if(endCamera - startCamera >= 7):
                 break
             cv2.imshow('', frame)
             if cv2.waitKey(20) & 0xFF == ord('q'):
@@ -249,31 +259,108 @@ class openDataSet:
             
         cap.release()
         cv2.destroyAllWindows()
+
+        pathCamera = os.path.basename(img_item)
+        if pathCamera:
+           strImage.set(pathCamera)
+           canvasImage = Canvas(window, width=256, height = 256)
+           canvasImage.pack()
+           
+           getImage= Image.open(img_item)
+           resize_displayed= getImage.resize((256, 256), Image.LANCZOS)
+           displayed = ImageTk.PhotoImage(resize_displayed)
+           canvas.create_image(530, 240, anchor = NW, image=displayed)
+           
+           start = time.time()
+           query = extract_features(img_item)
+           queryArray = []
+           queryArray.append(query)
+           
+           querySelisih = selisih(queryArray, mean(extract))
+           queryWeight = np.matmul(np.transpose(face), np.transpose(querySelisih))
+           distance = np.linalg.norm(weight - queryWeight, axis = 0)
+           bestMatch = np.argmin(distance)
+           print("-------------------------------------------------------------------------------------")
+           print(distance)
+           print(names[bestMatch])
+           output = str(names[bestMatch])
+           print("-------------------------------------------------------------------------------------")
+           print("Hasil")
+           print(output)
+           end = time.time()
+           
+           print(intervalData)
+           interval = intervalData + (end - start)
+           print(interval)
+           
+           rslt = str(pathFile) + "/" + output
+           print(rslt)
+           
+           openResult = Image.open(rslt)
+           resizeResult = openResult.resize((256,256), Image.LANCZOS)
+           displayedResult = ImageTk.PhotoImage(resizeResult)
+           
+           frame = Frame(window, width=256, height=256)
+           frame.pack()
+           frame.place(anchor=NW, relx=0.68, rely=0.32)
+           
+           labelResult = tk.Label(frame, image=displayedResult, borderwidth=0, highlightthickness=0)
+           labelResult.pack()
+           
+           displayresult = tk.Label(text = output,
+                        font=Body_tuple,
+                bg=bg_color,
+                fg=main_color)
+           displayresult.place(x=100, y=600)
+           
+           rundown = tk.Label(text = interval,
+                font=Body_tuple,
+                bg=bg_color,
+                fg="#FF0000")
+           
+           rundown.place(x =700, y = 550) 
                
     buttonCameraImage = PhotoImage(file=f'{img_dir}/src/components/button3.png')  
     buttonCamera = tk.Button(
                            bd = 0,
                            font=Body_tuple,
+                           bg = bg_color, 
                            image = buttonCameraImage,
                            command = openCamera,
                            )
     buttonCamera.place(x= 100, y = 500)
+    
+    global buttonUseOpen
+    img_dir = os.getcwd()
+    
+    def howToUse():
+        useWindow = Toplevel(window)
+        useWindow.geometry("350x500")
+        useWindow.title("How To Use Our Face Recognition")
+        useWindow.config(bg = bg_color)
+    
+        useTitle_text = tk.Label(useWindow, text="How To Use",
+                        font=H2_new,
+                        fg=main_color,
+                        bg=bg_color)
+        useTitle_text.place(x=70, y=40)
+        
+        
+        
+        
+    
+    
+    buttonUseOpen = PhotoImage(file=f'{img_dir}/src/components/button4.png')
+    buttonUse = tk.Button(
+                                font=Body_tuple,
+                                bd = 0,
+                                bg = bg_color, 
+                                image = buttonUseOpen, 
+                                command = howToUse,
+                                )
+    buttonUse.place(x=120, y=100)
 
-def history():
-    historyWindow = Toplevel(window)
-    historyWindow.geometry("650x800")
-    historyWindow.title("History")
 
-
-
-buttonHistory = tk.Button(text = "History", 
-                          font=H2_tuple,
-                       bg=bg_color,
-                       fg=main_color, command=history
-                          )      
-buttonHistory.place(x = 1050, y=550)
-
-  
 text_Result = tk.Label(text="Result",
                        font=H2_tuple,
                        bg=bg_color,
