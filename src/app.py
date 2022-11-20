@@ -17,6 +17,7 @@ window.config(bg="#F1F3FF")
 window.option_add("*Font", "Montserrat")
 
 
+
 # CONFIG
 H1_tuple = ("Montserrat-Bold", 48)
 H2_tuple = ("Montserrat-Medium", 20)
@@ -40,17 +41,6 @@ canvas.create_line(98, 150, 1246, 150, fill=main_color, width=2)
 canvas.create_rectangle(1250, 180, 486, 550, outline="", fill=secondary_color)
 
 
-class openImage:
-    def combineFunc(*funcs):
-        def combinedFunc(*args, **kwargs):
-            for f in funcs:
-                f(*args, **kwargs)
-
-        return combinedFunc
-
-    
-
-
 class openDataSet:
     def combineFunc(*funcs):
         def combinedFunc(*args, **kwargs):
@@ -64,9 +54,8 @@ class openDataSet:
     global path, strImage
     strImage = tk.StringVar()
     strImage.set("")
-    
     def open_Image():
-        global imagePath, getImage, displayed, end, output, displayedResult, interval
+        global imagePath, getImage, displayed, end, output, displayedResult, interval, path
         imagePath = filedialog.askopenfilename(filetypes=[('Images JPG', "*.jpg")])
         path = os.path.basename(imagePath)
         if imagePath:
@@ -109,11 +98,11 @@ class openDataSet:
             resizeResult = openResult.resize((256,256), Image.LANCZOS)
             displayedResult = ImageTk.PhotoImage(resizeResult)
             
-            frame = Frame(window, width=256, height=256, borderwidth=0, highlightthickness=0)
+            frame = Frame(window, width=256, height=256)
             frame.pack()
             frame.place(anchor=NW, relx=0.68, rely=0.32)
             
-            labelResult = tk.Label(frame, image=displayedResult)
+            labelResult = tk.Label(frame, image=displayedResult, borderwidth=0, highlightthickness=0)
             labelResult.pack()
             
             
@@ -129,15 +118,14 @@ class openDataSet:
                             bg=bg_color,
                             fg="#FF0000")
             rundown.place(x =700, y = 550)
+
         
         
         else:
             canvas.create_image(530, 240, anchor = NW, image=None)
             strImage.set("No file chosen")
-        return imagePath
-            
-        
-        
+    
+
     inputImage = tk.Label(text="Input Your Image",
                           font=H2_tuple,
                           fg=main_color,
@@ -156,7 +144,7 @@ class openDataSet:
 
     
         
-    buttonFileOpen = PhotoImage(file=f'{img_dir}/src/image/button1.png')
+    buttonFileOpen = PhotoImage(file=f'{img_dir}/src/components/button1.png')
     buttonImageOpen = tk.Button(
                             font=Body_tuple,
                             bd = 0,
@@ -197,16 +185,7 @@ class openDataSet:
             intervalData = endData - startData
             print("Interval process data: ")
             print(intervalData)
-            
-        
-            
-            #resultImage = Canvas(window, width =256, height = 256)
-            #resultImage.pack()
-            
-            #getImage = Image.open(file)
-            #closest_displayed = getImage.resize((256,256), Image.LANCZOS)
-            #displayed = ImageTk.PhotoImage(closest_displayed)
-            #canvas.create_image(600, 240, anchor = NW, image= displayed)
+
                 
         else:
             strData = tk.Label(text="Dataset not chosen", font=Body_tuple, fg=main_color, bg=bg_color)
@@ -218,10 +197,6 @@ class openDataSet:
                      fg=main_color)
     executionTime.place(x= 500, y = 550)      
             
-
-            
-    
-    
     inputFile = tk.Label(text="Input Your Dataset",
                          font=H2_tuple,
                          fg=main_color,
@@ -230,7 +205,7 @@ class openDataSet:
     
     img_dir = os.getcwd()
     
-    buttonFileImage = PhotoImage(file=f'{img_dir}/src/image/button2.png')  
+    buttonFileImage = PhotoImage(file=f'{img_dir}/src/components/button2.png')  
     buttonFile = tk.Button(
                            bd = 0,
                            font=Body_tuple,
@@ -239,46 +214,66 @@ class openDataSet:
                            )
     buttonFile.place(x=100, y=230)
     
-class openCamera:
-    def combineFunc(*funcs):
-        def combinedFunc(*args, **kwargs):
-            for f in funcs:
-                f(*args, **kwargs)
-
-        return combinedFunc
-    
-     
-    def showFrame():
-        newWindow = Toplevel(window)
-        newWindow.title("Camera")
-        newWindow.geometry("500x500")
+    def openCamera():
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
+        cancel = False
         
-        cap= cv2.VideoCapture(0)
-    
-        def capture():
+        cap = cv2.VideoCapture(0)
+        
+        dirname = os.path.dirname(__file__)
+        pathname = dirname.replace("src", "")
+        
+        startCamera = time.time()
+        
+        while(True):
+            global cam, imagePath1, imagePath2
             
-            cv2image= cv2.cvtColor(cap.read()[1],cv2.COLOR_BGR2RGB)
-            img = Image.fromarray(cv2image)
-            imgtk = ImageTk.PhotoImage(image = img)
-            newWindow.imgtk = imgtk
-            newWindow.configure(image=imgtk)
-            # Repeat after an interval to capture continiously
-            newWindow.after(20, capture)
-        
-        capture()
-    
-    img_dir = os.getcwd()
-    
-    buttonCameraImage = PhotoImage(file=f'{img_dir}/src/image/button3.png')  
+            ret, frame = cap.read()
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors = 5)
+            displayCam = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+            
+            for(x,y,w,h) in faces:
+                roi_gray = gray[y:y+h, x:x+w]
+                roi_color = frame[y:y+h, x:x+w]
+                img_item = "./src/test/imagefromCam.png"
+                cv2.imwrite(img_item, displayCam)
+
+            endCamera = time.time()
+            
+            if(endCamera - startCamera >= 10):
+                break
+            cv2.imshow('', frame)
+            if cv2.waitKey(20) & 0xFF == ord('q'):
+                break
+            
+        cap.release()
+        cv2.destroyAllWindows()
+               
+    buttonCameraImage = PhotoImage(file=f'{img_dir}/src/components/button3.png')  
     buttonCamera = tk.Button(
                            bd = 0,
                            font=Body_tuple,
                            image = buttonCameraImage,
-                           command = showFrame,
+                           command = openCamera,
                            )
     buttonCamera.place(x= 100, y = 500)
-    
-    
+
+def history():
+    historyWindow = Toplevel(window)
+    historyWindow.geometry("650x800")
+    historyWindow.title("History")
+
+
+
+buttonHistory = tk.Button(text = "History", 
+                          font=H2_tuple,
+                       bg=bg_color,
+                       fg=main_color, command=history
+                          )      
+buttonHistory.place(x = 1050, y=550)
+
+  
 text_Result = tk.Label(text="Result",
                        font=H2_tuple,
                        bg=bg_color,
@@ -299,15 +294,7 @@ imageResult = tk.Label(text="Closest Result",
 imageResult.place(x=950, y=200)
 
 
-
-
-
-
 def run():
     window.mainloop()
 
 run()
-#tinggal print file directory atau gausah
-#place foto
-#file image dan directory connect ke fungsi extract feature
-#execusion time

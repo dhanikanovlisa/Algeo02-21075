@@ -75,6 +75,23 @@ def weightFace(eigFace,selisih):
     wFace = np.matmul(np.transpose(eigFace), np.transpose(selisih))
     return wFace
 
+def threshold(distance):
+    max = np.argmax(distance)
+    threshold = 0.5 * (np.sqrt(max))
+
+    return threshold
+
+
+def bestMatch(distance):
+
+    final = []
+    acc = threshold(distance)
+    for i in distance:
+        if (i < acc):
+            final.append(i)
+
+    return np.argmin(final)
+
 
 '''path = "src/dataset/testdata"
 names, extract = batch_extractor(path) #nx2048
