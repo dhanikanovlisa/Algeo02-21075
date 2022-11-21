@@ -1,4 +1,4 @@
-# Algeo02-21075
+# Tugas Besar IF2123 Aljabar Linier dan Geometri
 
 Face Recognition Application using Eigen Value and Face with QR decomposition
 
@@ -16,15 +16,28 @@ Face Recognition Application using Eigen Value and Face with QR decomposition
 4. Numpy -- 1.21.5
 5. Sympy -- 1.11.1
 
-
 ## Screenshot App
 ![Screenshot App](./src/components/GUI.jpeg)
 
 ## Structures
+```bash
+└───Algeo02-21075
+    ├───src
+    │   ├───components
+    │   ├───dataset
+    │   │   ├───dataset1
+    │   │   ├───dataset2
+    │   │   ├───dataset3
+    │   │   └───dataset4
+    │   └───test
+    └───testdata
+```
 
 ## How to Run
 1. Make sure to have installed all needed library
 2. Go to src directory
 3. Run `python app.py`
-
+4. Make sure to insert dataset first
+5. Insert your image or you can open your camera
+6. Wait for a few seconds and the result will come up
 
