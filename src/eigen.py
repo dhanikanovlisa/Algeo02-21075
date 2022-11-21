@@ -93,39 +93,39 @@ def bestMatch(distance):
     return np.argmin(final)
 
 
-path = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/testdata"
-names, extract = batch_extractor(path) #nx2048
+# path = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/testdata"
+# names, extract = batch_extractor(path) #nx2048
 
-cov = covarian(extract)
-matSelisih = selisih(extract, mean(extract))
-eigVal, eigVec = qr_iteration(cov)
-face = eigenFace(matSelisih ,eigVec)
-weight = weightFace(face, matSelisih)
-print(eigVec)
-print(weight) #7x7
-tes = np.array(weight)
-print(tes.shape)
-
-
-path1 = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/testdata/Alex Lawther0_0.jpg"
-extracttes = extract_features(path1) #1x2048
-print(extracttes)
-extract1 = []
-extract1.append(extracttes)
-query = extract1
-
-matSelisih1 = selisih(query, mean(extract)) #1x2048 query-mean
-#tes = np.array(matSelisih1)
-#print(tes.shape)
-#eigenface 2048xn
-queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #nx2048
-
-tes2 = np.array(queryWeight)
-print(tes2.shape)
-'''distance = np.linalg.norm(weight - queryWeight, axis = 0) #7x7 
-bestMatch = np.argmin(distance)
-print(distance)
-print(names[bestMatch])'''
+# cov = covarian(extract)
+# matSelisih = selisih(extract, mean(extract))
+# eigVal, eigVec = qr_iteration(cov)
+# face = eigenFace(matSelisih ,eigVec)
+# weight = weightFace(face, matSelisih)
+# print(eigVec)
+# print(weight) #7x7
+# tes = np.array(weight)
+# print(tes.shape)
 
 
-#TAKBIRRRRRR
+# path1 = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/testdata/Alex Lawther0_0.jpg"
+# extracttes = extract_features(path1) #1x2048
+# print(extracttes)
+# extract1 = []
+# extract1.append(extracttes)
+# query = extract1
+
+# matSelisih1 = selisih(query, mean(extract)) #1x2048 query-mean
+# #tes = np.array(matSelisih1)
+# #print(tes.shape)
+# #eigenface 2048xn
+# queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #nx2048
+
+# tes2 = np.array(queryWeight)
+# print(tes2.shape)
+# '''distance = np.linalg.norm(weight - queryWeight, axis = 0) #7x7 
+# bestMatch = np.argmin(distance)
+# print(distance)
+# print(names[bestMatch])'''
+
+
+# #TAKBIRRRRRR
