@@ -12,10 +12,10 @@ window = tk.Tk()
 
 # WINDOW CONFIGURATION
 window.title("Face Recognition")
-window.geometry("1920x1024")
+window.geometry("1280x720")
 window.config(bg="#F1F3FF")
 window.option_add("*Font", "Montserrat")
-
+window.resizable(False, False)
 
 
 # CONFIG
@@ -50,6 +50,9 @@ class openDataSet:
 
         return combinedFunc
     
+    global strData
+    strData = tk.StringVar()
+    strData.set("")
     def openData():
         global pathFile, strData1, strData, cov, names, extract, matSelisih, cov, eigVal, eigVec, face, weight, startData, intervalData
         pathFile = filedialog.askdirectory() 
@@ -57,8 +60,7 @@ class openDataSet:
         
         print(pathFile)
         if pathFile:
-            strData1 = tk.Label(text="Succesfully choosed", font=Body_tuple, fg=main_color, bg=bg_color)
-            strData1.place(x=100, y= 260)
+            strData.set("Succesfull choosed")
             
             startData = time.time()
             names, extract = batch_extractor(pathFile)
@@ -83,15 +85,22 @@ class openDataSet:
 
                 
         else:
-            strData = tk.Label(text="Dataset not chosen", font=Body_tuple, fg=main_color, bg=bg_color)
-            strData.place(x=100, y= 300)
+            strData.set("Dataset not chosen")
         
-        return pathFile
+        selectedData = tk.Label(textvariable = strData,
+                                bg=bg_color,
+                             fg=main_color,
+                             font=Body_tuple
+                                )
+        selectedData.place(x=100, y = 260)
+    
 
     
-    global path, strImage
+    global path, strImage, strResult
     strImage = tk.StringVar()
     strImage.set("")
+    strResult = tk.StringVar()
+    strResult.set("")
     
     def open_Image():
         global imagePath, getImage, displayed, end, output, displayedResult, interval, path
@@ -143,13 +152,17 @@ class openDataSet:
             
             labelResult = tk.Label(frame, image=displayedResult, borderwidth=0, highlightthickness=0)
             labelResult.pack()
+
+            
+            
+            strResult.set(output)
             
             
             frameResult = Frame(window, width = 250, height = 100)
             frameResult.pack()
             frameResult.place(x = 100, y = 600)
         
-            displayresult = tk.Label(frame, text = output,
+            displayresult = tk.Label(frame, textvariable = strResult,
                                      font=Body_tuple,
                             bg=bg_color,
                             fg=main_color)
@@ -168,9 +181,7 @@ class openDataSet:
         else:
             canvas.create_image(530, 240, anchor = NW, image=None)
             strImage.set("No file chosen")
-        
-
-          
+                
     inputImage = tk.Label(text="Input Your Image",
                           font=H2_tuple,
                           fg=main_color,
