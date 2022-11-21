@@ -3,6 +3,7 @@ from numpy import linalg as lin
 from extract import *
 from sympy import *
 
+
 def mean(arr):
     result = [0] * 2048
     for i in range(len(arr)):
@@ -54,7 +55,7 @@ def qr_iteration(A):
     Q, _ = eigen_qr(Q) #Use QR decomposition to Q
 
  
-    for i in range(100):
+    for i in range(1000):
         Z = A.dot(Q)
         Q, R = eigen_qr(Z)
     #Do the same thing over and over until it converges
@@ -73,13 +74,56 @@ def weightFace(eigFace,selisih):
     wFace = np.matmul(np.transpose(eigFace), np.transpose(selisih))
     return wFace
 
+def threshold(distance):
+    max = np.argmax(distance)
+    threshold = 0.5 * (np.sqrt(max))
 
-path = "src/dataset/pins_Adriana Lima"
-extract = batch_extractor(path)
-cov = covarian(batch_extractor(path))
-matSelisih = np.array(selisih(extract, mean(extract)))
-eigVal, eigVec = qr_iteration(cov)
-face = np.array(eigenFace(matSelisih ,eigVec))
-print(eigVec)
-print("\n\n\n")
-print(face.shape)
+    return threshold
+
+def bestMatch(distance):
+
+    final = []
+    acc = threshold(distance)
+    for i in distance:
+        if (i < acc):
+            final.append(i)
+
+    return np.argmin(final)
+
+
+# path = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/testdata"
+# names, extract = batch_extractor(path) #nx2048
+
+# cov = covarian(extract)
+# matSelisih = selisih(extract, mean(extract))
+# eigVal, eigVec = qr_iteration(cov)
+# face = eigenFace(matSelisih ,eigVec)
+# weight = weightFace(face, matSelisih)
+# print(eigVec)
+# print(weight) #7x7
+# tes = np.array(weight)
+# print(tes.shape)
+
+
+# path1 = "D:/00_STEI ITB/03_SMT3/Aljabar Geometri dan Linear/testdata/Alex Lawther0_0.jpg"
+# extracttes = extract_features(path1) #1x2048
+# print(extracttes)
+# extract1 = []
+# extract1.append(extracttes)
+# query = extract1
+
+# matSelisih1 = selisih(query, mean(extract)) #1x2048 query-mean
+# #tes = np.array(matSelisih1)
+# #print(tes.shape)
+# #eigenface 2048xn
+# queryWeight = np.matmul(np.transpose(face), np.transpose(matSelisih1)) #nx2048
+
+# tes2 = np.array(queryWeight)
+# print(tes2.shape)
+# '''distance = np.linalg.norm(weight - queryWeight, axis = 0) #7x7 
+# bestMatch = np.argmin(distance)
+# print(distance)
+# print(names[bestMatch])'''
+
+
+# #TAKBIRRRRRR

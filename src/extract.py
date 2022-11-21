@@ -4,6 +4,8 @@ import os
 from matplotlib.pyplot import imread
 import sys
 from numpy.linalg import eig
+import pickle
+import csv
 
 # Feature extractor
 def extract_features(image_path, vector_size=32):
@@ -38,23 +40,21 @@ def extract_features(image_path, vector_size=32):
 
 def batch_extractor(images_path):
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
-    i = 0
     result = {}
+
     for f in files:
-        result[i] = extract_features(f)
-        i += 1 
-    result = list(result.values())
-    return result
+        name = os.path.basename(f)
+        result[name] = extract_features(f)
+    
+    names = []
+    extract = []
+    
+    for items in result:
+        names.append(items)
+        change = np.ndarray.tolist(result[items])
+        extract.append(change)
+        
+            
+    return names, extract
 
-'''
-path = "src/dataset/pins_camila mendes/camila mendes0_948.jpg"
-feature = extract_features(path)
-feature = np.array(feature)
-print(feature.shape) # 2048 x 1
 
-
-path2 = "src/dataset/pins_camila mendes"
-batch = batch_extractor(path2)
-batch = np.array(batch)
-print(batch.shape) # N x 2048
-'''
