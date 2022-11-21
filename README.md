@@ -9,16 +9,16 @@ Face Recognition Application using Eigen Value and Face with QR decomposition
 | 13521132 | Dhanika Novlisariyanti  |
 
 ## Technology Stack Used
-1. Python --version 3.11.0
-2. Tkinter --version 8.6
-2. OpenCV --4.6.0
+1. Python -- 3.11.0
+2. Tkinter -- 8.6
+2. OpenCV -- 4.6.0
 3. Pillow -- 9.3.0
 4. Numpy -- 1.21.5
 5. Sympy -- 1.11.1
 
 
-## Screenshoots
-![alt text](https://github.com/dhanikanovlisa/Algeo02-21075/blob/main/GUI.jpg?raw=true)
+## Screenshot App
+![Screenshot App](./src/components/GUI.jpeg)
 
 ## Structures
 
