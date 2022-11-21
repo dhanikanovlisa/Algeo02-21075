@@ -157,12 +157,8 @@ class openDataSet:
             
             strResult.set(output)
             
-            
-            frameResult = Frame(window, width = 250, height = 100)
-            frameResult.pack()
-            frameResult.place(x = 100, y = 600)
         
-            displayresult = tk.Label(frame, textvariable = strResult,
+            displayresult = tk.Label(window, textvariable = strResult,
                                      font=Body_tuple,
                             bg=bg_color,
                             fg=main_color)
