@@ -1,1 +1,1 @@
-## File ini ada sebagai pembuat folder 'test' untuk menyimpan foto saat open camera
+## Folder `test` harus sudah ada untuk menyimpan foto dari kamera
