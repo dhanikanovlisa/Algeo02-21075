@@ -60,7 +60,7 @@ class openDataSet:
         
         print(pathFile)
         if pathFile:
-            strData.set("Succesfull choosed")
+            strData.set("Succesfully choosed")
             
             startData = time.time()
             names, extract = batch_extractor(pathFile)
@@ -153,11 +153,7 @@ class openDataSet:
             labelResult = tk.Label(frame, image=displayedResult, borderwidth=0, highlightthickness=0)
             labelResult.pack()
 
-            
-            
             strResult.set(output)
-            
-        
             displayresult = tk.Label(window, textvariable = strResult,
                                      font=Body_tuple,
                             bg=bg_color,
@@ -242,6 +238,7 @@ class openDataSet:
         
         startCamera = time.time()
         
+        
         while(True):
             global cam, imagePath1, imagePath2
             
@@ -303,18 +300,20 @@ class openDataSet:
            rslt = str(pathFile) + "/" + output
            print(rslt)
            
+           strResult.set(output)
+           
            openResult = Image.open(rslt)
            resizeResult = openResult.resize((256,256), Image.LANCZOS)
            displayedResult = ImageTk.PhotoImage(resizeResult)
            
            frame = Frame(window, width=256, height=256)
            frame.pack()
-           frame.place(anchor=NW, relx=0.68, rely=0.32)
+           frame.place(anchor=NW, relx=0.98, rely=0.32)
            
            labelResult = tk.Label(frame, image=displayedResult, borderwidth=0, highlightthickness=0)
            labelResult.pack()
            
-           displayresult = tk.Label(text = output,
+           displayresult = tk.Label(textvariable = strResult,
                         font=Body_tuple,
                 bg=bg_color,
                 fg=main_color)
@@ -337,6 +336,9 @@ class openDataSet:
                            )
     buttonCamera.place(x= 100, y = 500)
     
+    
+
+
     global buttonUseOpen
     img_dir = os.getcwd()
     
