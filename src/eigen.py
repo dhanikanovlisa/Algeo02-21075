@@ -2,6 +2,7 @@ import numpy as np
 from numpy import linalg as lin
 from extract import *
 from sympy import *
+import math
 
 
 def mean(arr):
@@ -74,6 +75,8 @@ def weightFace(eigFace,selisih):
     #Kalo 4 image berarti selisihnya 2048 x 4 berarti vector eigennya 4x3
     wFace = np.matmul(np.transpose(eigFace), np.transpose(selisih))
     return wFace
+<<<<<<< HEAD
+=======
 
 def threshold(distance):
     max = np.argmax(distance)
@@ -129,3 +132,4 @@ def bestMatch(distance):
 
 
 # #TAKBIRRRRRR
+>>>>>>> 6698ac5d63983132ec56aad29c66b5a8e9517179
