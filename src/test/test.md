@@ -1,0 +1,1 @@
+## File ini ada sebagai pembuat folder 'test' untuk menyimpan foto saat open camera
