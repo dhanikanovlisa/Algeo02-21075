@@ -1,0 +1,1 @@
+## Folder `test` harus sudah tersedia untuk menyimpan foto dari kamera

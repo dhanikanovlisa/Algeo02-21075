@@ -35,9 +35,7 @@ Face Recognition Application using Eigen Value and Face with QR decomposition
 
 ## How to Run
 1. Make sure to have installed all needed library
-2. Go to src directory
-3. Run `python app.py`
-4. Make sure to insert dataset first
-5. Insert your image or you can open your camera
-6. Wait for a few seconds and the result will come up
-
+2. On root directory run `python src/app.py`
+3. Make sure to insert dataset first
+4. Insert your image or you can open your camera
+5. Wait for a few seconds and the result will come up
