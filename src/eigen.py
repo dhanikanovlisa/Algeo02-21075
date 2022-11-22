@@ -5,14 +5,14 @@ from sympy import *
 import math
 
 
-def mean(arr):
+def mean(arr): #nx0248
     result = [0] * 2048
     for i in range(len(arr)):
         result = np.add(result, arr[i])
     result = result / len(arr)
     return result
 
-def selisih(arr, mean):
+def selisih(arr, mean): #nx2048
     for i in range(len(arr)):
         arr[i] = arr[i] - mean
     return arr
@@ -40,6 +40,7 @@ def eigen_qr(A):
 #Buat cari vektor normalisasi
 def make_householder(a):
 
+    #baru baca q&a telat asumsi linalg norm gaboleh di euclidean distance doang :)
     u = a / (a[0] + np.copysign(np.linalg.norm(a), a[0]))
     u[0] = 1
     H = np.eye(a.shape[0]) #create matriks nxn, n = a.shape[0]

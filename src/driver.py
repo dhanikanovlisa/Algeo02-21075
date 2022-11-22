@@ -17,5 +17,5 @@ queryWeight = queryWeight(eigenFace, query)
 eucDistance = euclideanDistance(weight, queryWeight)
 minDistance, match = bestMatch(names, eucDistance)
 print(minDistance)
-print(match)
-'''
+print(match)'''
+

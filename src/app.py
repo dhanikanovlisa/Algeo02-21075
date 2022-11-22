@@ -29,10 +29,11 @@ main_color = ("#001666")
 secondary_color = ("#B5C1EC")
 third_color = ("#F5F5F5")
 
+#SET CANVAS FOR IMAGE DISPLAYED
 canvas = Canvas(window, height=1024, width=1920, bg=bg_color)
 canvas.pack()
 
-# TITLE
+# TITLE MENU
 title_Menu = tk.Label(text="FACE RECOGNITION",
                       font=H1_tuple,
                       fg=main_color,
@@ -42,7 +43,7 @@ title_Menu.place(x=350, y=40)
 canvas.create_line(98, 150, 1246, 150, fill=main_color, width=2)
 canvas.create_rectangle(1250, 180, 486, 550, outline="", fill=secondary_color)
 
-
+ 
 class openDataSet:
     def combineFunc(*funcs):
         def combinedFunc(*args, **kwargs):
@@ -55,21 +56,34 @@ class openDataSet:
     strData = tk.StringVar()
     strData.set("")
 
+
+    #OPEN FOLDER DATASET
     def openData():
         global pathFile, strData1, strData, matriksKovarian, names, extract, matriksSelisih, cov, eigValue, eigVector, eigenDataFace, weight, startData, intervalData
+        
+        #GET PATH FOLDER 
         pathFile = filedialog.askdirectory()
+        
         tes = os.path.basename(pathFile)
 
         print(pathFile)
         try:
+            #START PROCESS DATA
             strData.set("Succesfully choosed")
 
+            #START TIME EXTRACT DATA
             startData = time.time()
+            
+            #GET NAMES AND EXTRACT
             names, extract = batch_extractor(pathFile)
+            #COVARIAN MATRIX
             matriksKovarian = covarian(extract)
             matriksSelisih = selisih(extract, mean(extract))
+            #EIGEN VALUE AND VECTOR
             eigValue, eigVector = getEigen(matriksKovarian)
+            #EIGENFACE
             eigenDataFace = eigenFace(matriksSelisih, eigVector)
+            #WEIGHTFACE
             weight = weightFace(eigenDataFace, matriksSelisih)
 
             print("Vektor eigen: ")
@@ -105,9 +119,10 @@ class openDataSet:
     strResult.set("")
 
     def open_Image():
-    
-            
+
         global imagePath, getImage, displayed, end, output, displayedResult, interval, path
+        
+        #GET IMAGE PATH
         imagePath = filedialog.askopenfilename(filetypes=[('Images JPG', "*.jpg")])
         path = os.path.basename(imagePath)
             
@@ -120,7 +135,8 @@ class openDataSet:
             resize_displayed = getImage.resize((256, 256))
             displayed = ImageTk.PhotoImage(resize_displayed)
             canvas.create_image(530, 240, anchor=NW, image=displayed)
-
+            
+            #START EXTRACT IMAGE TIME
             start = time.time()
             query = extractFace(imagePath, extract)
             queryImageWeight = queryWeight(eigenDataFace, query)
@@ -316,7 +332,7 @@ class openDataSet:
 
             frame = Frame(window, width=256, height=256)
             frame.pack()
-            frame.place(anchor=NW, x=0.75, rely=0.32)
+            frame.place(anchor=NW, relx=0.75, rely=0.33)
 
             labelResult = tk.Label(
                 frame, image=displayedResult, borderwidth=0, highlightthickness=0)
@@ -411,6 +427,7 @@ imageResult = tk.Label(text="Closest Result",
 imageResult.place(x=950, y=200)
 
 
+#RUN TKINTER APP
 def run():
     window.mainloop()
 
