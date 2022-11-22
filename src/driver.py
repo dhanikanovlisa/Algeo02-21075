@@ -7,7 +7,7 @@ from faceDetection import *
 names, extract = batch_extractor(dataPath) #nx2048
 matriksKovarian = covarian(extract) #nxn
 matriksSelisih = selisih(extract, mean(extract)) #nx2048
-eigValue, eigVector = qr_iteration(matriksKovarian) #nxn
+eigValue, eigVector = getEigen(matriksKovarian) #nxn
 eigenFace = eigenFace(matriksSelisih, eigVector) #nxn
 weight = weightFace(eigenFace, matriksSelisih) #nxn 
 

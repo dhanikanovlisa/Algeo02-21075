@@ -42,15 +42,14 @@ def make_householder(a):
 
     u = a / (a[0] + np.copysign(np.linalg.norm(a), a[0]))
     u[0] = 1
-    H = np.eye(a.shape[0])
+    H = np.eye(a.shape[0]) #create matriks nxn, n = a.shape[0]
 
     H -= (2 / np.dot(u, u)) * u[:, None] @ u[None, :]
     return H    
 
-def qr_iteration(A):
+def getEigen(A):
   
     #Algorithm to find eigenValues and eigenVector matrix using simultaneous power iteration.
-
     n, m = A.shape 
     Q = np.random.rand(n, m) #Make a random n x k matrix
     Q, _ = eigen_qr(Q) #Use QR decomposition to Q

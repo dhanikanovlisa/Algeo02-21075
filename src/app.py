@@ -68,7 +68,7 @@ class openDataSet:
             names, extract = batch_extractor(pathFile)
             matriksKovarian = covarian(extract)
             matriksSelisih = selisih(extract, mean(extract))
-            eigValue, eigVector = qr_iteration(matriksKovarian)
+            eigValue, eigVector = getEigen(matriksKovarian)
             eigenDataFace = eigenFace(matriksSelisih, eigVector)
             weight = weightFace(eigenDataFace, matriksSelisih)
 
@@ -77,7 +77,7 @@ class openDataSet:
             print(
                 "-------------------------------------------------------------------------------------")
             print("Eigenface: ")
-            print(eigenFace)
+            print(eigenDataFace)
             print(
                 "-------------------------------------------------------------------------------------")
             print("Weight Face: ")
@@ -126,6 +126,11 @@ class openDataSet:
             queryImageWeight = queryWeight(eigenDataFace, query)
             eucDistance = euclideanDistance(weight, queryImageWeight)
             minDistance, match = bestMatch(names, eucDistance)
+            
+            print(
+                "-------------------------------------------------------------------------------------")
+            print("Euclidean distance yang dihasilkan ")
+            print(eucDistance)
 
             print(
                 "-------------------------------------------------------------------------------------")
@@ -174,6 +179,8 @@ class openDataSet:
             strImage.set("No file chosen")
         except NameError:
             strImage.set("Please choose dataset first")
+        except PermissionError:
+            strImage.set("Permission denied")
 
     inputImage = tk.Label(text="Input Your Image",
                           font=H2_tuple,
